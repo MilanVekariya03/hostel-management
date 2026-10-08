@@ -119,14 +119,17 @@ pipeline {
                             credentialsId: 'github-credentials',
                             usernameVariable: 'GITHUB_USERNAME',
                             passwordVariable: 'GITHUB_TOKEN'
-                            )
+                        )
                     ]) {
-
                         sh '''
-                            git push https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/MilanVekariya03/hostel-management.git HEAD:main
+                            git config user.name "Jenkins"
+                            git config user.email "jenkins@example.com"
+
+                            git remote set-url origin https://github.com/MilanVekariya03/hostel-management.git
+
+                            git push origin HEAD:main
                         '''
                     }
-                '''
             }
         }
     }

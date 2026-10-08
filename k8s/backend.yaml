@@ -20,7 +20,7 @@ spec:
       containers:
         - name: backend
 
-          image: milan12344/hostel-backend:latest
+          image: milan12344/hostel-backend:8
 
           imagePullPolicy: Always
 

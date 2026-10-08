@@ -20,7 +20,7 @@ spec:
       containers:
         - name: frontend
 
-          image: milan12344/hostel-frontend:BUILD_NUMBER
+          image: milan12344/hostel-frontend:latest
 
           imagePullPolicy: Always
 

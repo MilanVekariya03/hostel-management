@@ -123,8 +123,8 @@ pipeline {
                     ]) {
 
                         sh '''
-                            git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/MilanVekariya03/hostel-management.git HEAD:main
-                            '''
+                            git push https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/MilanVekariya03/hostel-management.git HEAD:main
+                        '''
                     }
                 '''
             }

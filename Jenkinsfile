@@ -93,6 +93,8 @@ pipeline {
 
                         docker push ${FRONTEND_IMAGE}:${BUILD_NUMBER}
                         docker push ${FRONTEND_IMAGE}:latest
+
+                        docker logout
                     '''
                 }
             }
@@ -113,23 +115,25 @@ pipeline {
                     git add k8s/
 
                     git commit -m "Update images to build ${BUILD_NUMBER}" || true
+                '''
 
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'github-credentials',
-                            usernameVariable: 'GITHUB_USERNAME',
-                            passwordVariable: 'GITHUB_TOKEN'
-                        )
-                    ]) {
-                        sh '''
-                            git config user.name "Jenkins"
-                            git config user.email "jenkins@example.com"
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-credentials',
+                        usernameVariable: 'GITHUB_USERNAME',
+                        passwordVariable: 'GITHUB_TOKEN'
+                    )
+                ]) {
 
-                            git remote set-url origin https://github.com/MilanVekariya03/hostel-management.git
+                    sh '''
+                        git config user.name "Jenkins"
+                        git config user.email "jenkins@example.com"
 
-                            git push origin HEAD:main
-                        '''
-                    }
+                        git remote set-url origin "https://github.com/MilanVekariya03/hostel-management.git"
+
+                        git -c credential.helper='!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_TOKEN; }; f' push origin main
+                    '''
+                }
             }
         }
     }

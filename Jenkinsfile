@@ -114,7 +114,18 @@ pipeline {
 
                     git commit -m "Update images to build ${BUILD_NUMBER}" || true
 
-                    git push origin HEAD:main
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'github-credentials',
+                            usernameVariable: 'GITHUB_USERNAME',
+                            passwordVariable: 'GITHUB_TOKEN'
+                            )
+                    ]) {
+
+                        sh '''
+                            git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/MilanVekariya03/hostel-management.git HEAD:main
+                            '''
+                    }
                 '''
             }
         }

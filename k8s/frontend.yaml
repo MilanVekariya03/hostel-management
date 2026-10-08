@@ -20,7 +20,7 @@ spec:
       containers:
         - name: frontend
 
-          image: milan12344/hostel-frontend:8
+          image: milan12344/hostel-frontend:9
 
           imagePullPolicy: Always
 

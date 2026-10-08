@@ -11,6 +11,8 @@ pipeline {
         BACKEND_IMAGE = "${DOCKER_USER}/hostel-backend"
 
         KUBECONFIG = "/var/lib/jenkins/.kube/config"
+
+        PATH = "/usr/bin:/usr/local/bin:${env.PATH}"
     }
 
     stages {

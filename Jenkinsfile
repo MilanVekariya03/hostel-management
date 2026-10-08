@@ -32,7 +32,9 @@ pipeline {
 
                 sh '''
                     cd backend
+
                     npm install
+
                     npm test
                 '''
             }
@@ -44,7 +46,9 @@ pipeline {
 
                 sh '''
                     cd frontend
+
                     npm install
+
                     npm run build
                 '''
             }
@@ -54,22 +58,19 @@ pipeline {
 
             steps {
 
-                script {
+                sh """
+                    docker build \
+                    -t ${BACKEND_IMAGE}:${BUILD_NUMBER} \
+                    -t ${BACKEND_IMAGE}:latest \
+                    ./backend
+                """
 
-                    sh """
-                        docker build \
-                        -t ${BACKEND_IMAGE}:${BUILD_NUMBER} \
-                        -t ${BACKEND_IMAGE}:latest \
-                        ./backend
-                    """
-
-                    sh """
-                        docker build \
-                        -t ${FRONTEND_IMAGE}:${BUILD_NUMBER} \
-                        -t ${FRONTEND_IMAGE}:latest \
-                        ./frontend
-                    """
-                }
+                sh """
+                    docker build \
+                    -t ${FRONTEND_IMAGE}:${BUILD_NUMBER} \
+                    -t ${FRONTEND_IMAGE}:latest \
+                    ./frontend
+                """
             }
         }
 
@@ -91,9 +92,11 @@ pipeline {
                         --password-stdin
 
                         docker push ${BACKEND_IMAGE}:${BUILD_NUMBER}
+
                         docker push ${BACKEND_IMAGE}:latest
 
                         docker push ${FRONTEND_IMAGE}:${BUILD_NUMBER}
+
                         docker push ${FRONTEND_IMAGE}:latest
 
                         docker logout
@@ -112,6 +115,7 @@ pipeline {
                     sed -i "s|image: .*/hostel-frontend:.*|image: ${FRONTEND_IMAGE}:${BUILD_NUMBER}|g" k8s/frontend.yaml
 
                     git config user.name "Jenkins"
+
                     git config user.email "jenkins@example.com"
 
                     git add k8s/
@@ -129,11 +133,12 @@ pipeline {
 
                     sh '''
                         git config user.name "Jenkins"
+
                         git config user.email "jenkins@example.com"
 
                         git remote set-url origin "https://github.com/MilanVekariya03/hostel-management.git"
 
-                        git -c credential.helper='!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_TOKEN; }; f' push origin main
+                        git -c credential.helper='!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_TOKEN; }; f' push origin HEAD:main
                     '''
                 }
             }
